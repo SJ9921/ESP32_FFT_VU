@@ -18,9 +18,9 @@
 #define MAX_MILLIAMPS   2000          // Careful with the amount of power here if running off USB port
 const int BRIGHTNESS_SETTINGS[3] = {5, 70, 200};  // 3 Integer array for 3 brightness settings (based on pressing+holding BTN_PIN)
 #define LED_VOLTS       5             // Usually 5 or 12
-#define NUM_BANDS       16            // To change this, you will need to change the bunch of if statements describing the mapping from bins to bands
+#define NUM_BANDS       32            // To change this, you will need to change the bunch of if statements describing the mapping from bins to bands
 #define NOISE           500           // Used as a crude noise filter, values below this are ignored
-const uint8_t kMatrixWidth = 16;                          // Matrix width
+const uint8_t kMatrixWidth = 32;                          // Matrix width
 const uint8_t kMatrixHeight = 16;                         // Matrix height
 #define NUM_LEDS       (kMatrixWidth * kMatrixHeight)     // Total number of LEDs
 #define BAR_WIDTH      (kMatrixWidth  / (NUM_BANDS - 1))  // If width >= 8 light 1 LED width per bar, >= 16 light 2 LEDs width bar etc
@@ -29,9 +29,9 @@ const uint8_t kMatrixHeight = 16;                         // Matrix height
 
 // Sampling and FFT stuff
 unsigned int sampling_period_us;
-byte peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};              // The length of these arrays must be >= NUM_BANDS
-int oldBarHeights[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int bandValues[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+byte peak[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};              // The length of these arrays must be >= NUM_BANDS
+int oldBarHeights[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int bandValues[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 double vReal[SAMPLES];
 double vImag[SAMPLES];
 unsigned long newTime;
@@ -73,7 +73,7 @@ uint8_t colorTimer = 0;
 FastLED_NeoMatrix *matrix = new FastLED_NeoMatrix(leds, kMatrixWidth, kMatrixHeight,
   NEO_MATRIX_TOP        + NEO_MATRIX_LEFT +
   NEO_MATRIX_ROWS       + NEO_MATRIX_ZIGZAG +
-  NEO_TILE_TOP + NEO_TILE_LEFT + NEO_TILE_ROWS);
+  NEO_TILE_TOP + NEO_TILE_LEFT + NEO_TILE_COLUMNS);
 
 void setup() {
   Serial.begin(115200);
@@ -152,7 +152,7 @@ void loop() {
       if (i>112 && i<=229) bandValues[6]  += (int)vReal[i];
       if (i>229          ) bandValues[7]  += (int)vReal[i];*/
 
-    //16 bands, 12kHz top band
+    /16 bands, 12kHz top band
       if (i<=2 )           bandValues[0]  += (int)vReal[i];
       if (i>2   && i<=3  ) bandValues[1]  += (int)vReal[i];
       if (i>3   && i<=5  ) bandValues[2]  += (int)vReal[i];
@@ -168,7 +168,41 @@ void loop() {
       if (i>97  && i<=135) bandValues[12] += (int)vReal[i];
       if (i>135 && i<=189) bandValues[13] += (int)vReal[i];
       if (i>189 && i<=264) bandValues[14] += (int)vReal[i];
-      if (i>264          ) bandValues[15] += (int)vReal[i];
+      if (i>264          ) bandValues[15] += (int)vReal[i];*/
+
+    //32 bands, 12kHz top band
+      if (i<=2 )           bandValues[0]  += (int)vReal[i];
+      if (i>2   && i<=3  ) bandValues[1]  += (int)vReal[i];
+      if (i>3   && i<=3  ) bandValues[2]  += (int)vReal[i];
+      if (i>3   && i<=4  ) bandValues[3]  += (int)vReal[i];
+      if (i>4   && i<=4  ) bandValues[4]  += (int)vReal[i];
+      if (i>4   && i<=5  ) bandValues[5]  += (int)vReal[i];
+      if (i>5   && i<=6  ) bandValues[6]  += (int)vReal[i];
+      if (i>6   && i<=7  ) bandValues[7]  += (int)vReal[i];
+      if (i>7   && i<=8  ) bandValues[8]  += (int)vReal[i];
+      if (i>8   && i<=10  ) bandValues[9]  += (int)vReal[i];
+      if (i>10   && i<=11  ) bandValues[10]  += (int)vReal[i];
+      if (i>11   && i<=13  ) bandValues[11]  += (int)vReal[i];
+      if (i>13   && i<=15  ) bandValues[12]  += (int)vReal[i];
+      if (i>15   && i<=18  ) bandValues[13]  += (int)vReal[i];
+      if (i>18   && i<=21  ) bandValues[14]  += (int)vReal[i];
+      if (i>21   && i<=25  ) bandValues[15]  += (int)vReal[i];
+      if (i>25   && i<=30  ) bandValues[16]  += (int)vReal[i];
+      if (i>30   && i<=35  ) bandValues[17]  += (int)vReal[i];
+      if (i>35   && i<=41  ) bandValues[18]  += (int)vReal[i];
+      if (i>41   && i<=48  ) bandValues[19]  += (int)vReal[i];
+      if (i>48   && i<=56  ) bandValues[20]  += (int)vReal[i];
+      if (i>56   && i<=66  ) bandValues[21]  += (int)vReal[i];
+      if (i>66   && i<=78  ) bandValues[22]  += (int)vReal[i];
+      if (i>78   && i<=92  ) bandValues[23]  += (int)vReal[i];
+      if (i>92   && i<=108  ) bandValues[24]  += (int)vReal[i];
+      if (i>108   && i<=127  ) bandValues[25]  += (int)vReal[i];
+      if (i>127   && i<=149  ) bandValues[26]  += (int)vReal[i];
+      if (i>149   && i<=175  ) bandValues[27]  += (int)vReal[i];
+      if (i>175   && i<=206  ) bandValues[28]  += (int)vReal[i];
+      if (i>206   && i<=242  ) bandValues[29]  += (int)vReal[i];
+      if (i>242   && i<=284  ) bandValues[30]  += (int)vReal[i];
+      if (i>284             ) bandValues[31]  += (int)vReal[i];
     }
   }
 
@@ -331,3 +365,4 @@ void waterfall(int band) {
     }
   }
 }
+
